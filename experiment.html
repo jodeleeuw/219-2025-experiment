@@ -1,0 +1,297 @@
+<html>
+  <head>
+    <title>My experiment</title>
+    <script src="https://unpkg.com/jspsych@8.2.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-html-keyboard-response@2.1.0"></script>
+    <script src="https://unpkg.com/@jspsych/plugin-fullscreen@2.1.0"></script>
+    <link href="https://unpkg.com/jspsych@8.2.0/css/jspsych.css" rel="stylesheet" type="text/css" />
+    <script src="https://unpkg.com/@jspsych-contrib/plugin-survey-number@1.0.0"></script>
+    <script src="plugin-moving-dots/dist/index.browser.js"></script>
+    <script src="pre-recorded-trajectories/trajectories.js"></script>
+  </head>
+  <style>
+    
+    body {
+      background-color: rgb(191,191,191);
+    }
+    
+  </style>
+  <body>
+  </body>
+  <script>
+    function generate_training_conditions() {
+      var trial = 0;
+      var conds = [[100, 100], [100, 70], [100, 30], [0, 100], [0, 70], [0, 30]];
+      var array = [];
+      while (trial < 30) {
+        var rand = Math.floor(Math.random() * 6); //Generate index 0 through 5
+        array.push(conds[rand]);
+        trial += 1;
+      }
+      return array;
+    }
+    
+    function generate_conditions() {
+      var trial = 0;
+      var conds = [[100, 100], [100, 70], [100, 30], [0, 100], [0, 70], [0, 30]];
+      var count = [0,0,0,0,0,0];
+      var array = [];
+      while (trial < 300) {
+        var rand = Math.floor(Math.random() * 6); //Generate index 0 through 5
+        if (count[rand] < 50) {
+          array.push(conds[rand]);
+          trial += 1;
+          count[rand] += 1;
+        }
+      }
+      return array;
+    }
+
+    const jsPsych = initJsPsych();
+
+    var practice_conditions = generate_training_conditions();
+    var conditions = generate_conditions();
+    // allTrajectories is defined in trajectories.js
+    const shuffledTrajectories = jsPsych.randomization.shuffle(allTrajectories);
+
+    var timeline = [];
+
+    let subject_id = null;
+    
+    var fullscreen = {
+        type: jsPsychFullscreen,
+        fullscreen_mode: true
+    };
+    timeline.push(fullscreen);
+    
+    var subject_id_entry = {
+      type: jsPsychSurveyNumber,
+      questions: [{
+          prompt: 'Subject ID number:',
+          name: 'ID',
+          required: true,
+      }],
+      on_finish: function(data) {
+        subject_id = data.response.ID;
+        jsPsych.data.addProperties({
+          subject: data.response.ID
+        });
+      }
+    }
+    timeline.push(subject_id_entry);
+    
+    var introduction = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "You will have 30 practice trials. Press the space key to begin.",
+      post_trial_gap: 2000
+    }
+    timeline.push(introduction);
+  
+    //TO REPLACE
+    var practice_test_stimuli = [];
+    var test_stimuli = [];
+    
+    for (let i = 0; i < practice_conditions.length; i++) {
+      practice_test_stimuli.push({
+        pre_flash_duration: (2500 + 500*Math.random()), // Pre-flash duration in milliseconds
+        initial_control_level: practice_conditions[i][0], // Initial control level
+        control_change_level: practice_conditions[i][1], // Control change level
+        playback: shuffledTrajectories[i] // Loaded playback data
+    });};
+    
+    for (let i = 0; i < conditions.length; i++) {
+      test_stimuli.push({
+        pre_flash_duration: (2500 + 500*Math.random()), // Pre-flash duration in milliseconds
+        initial_control_level: conditions[i][0], // Initial control level
+        control_change_level: conditions[i][1], // Control change level
+        playback: shuffledTrajectories[i+practice_conditions.length] // Loaded playback data
+    });};
+
+    //TO REPLACE:
+    var fixation = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: '<div style="font-size:60px;">+</div>',
+      choices: [' '],
+      data: {
+        task: 'fixation'
+      } 
+    };
+
+    var practice_test = {
+      type: jsPsychPluginMovingDots,
+      pre_flash_duration: jsPsych.timelineVariable('pre_flash_duration'), // Pre-flash duration in milliseconds
+      post_flash_duration: 1500, // Post-flash duration in milliseconds
+      initial_control_level: jsPsych.timelineVariable('initial_control_level'), // Initial control level
+      control_change_level: jsPsych.timelineVariable('control_change_level'), // Control change level
+      playback: jsPsych.timelineVariable('playback'), // Loaded playback data,
+      practice_trial: true,
+      data: {
+        task: 'dot-moving'
+      }
+    }
+
+   var test = {
+      type: jsPsychPluginMovingDots,
+      pre_flash_duration: jsPsych.timelineVariable('pre_flash_duration'), // Pre-flash duration in milliseconds
+      post_flash_duration: 1500, // Post-flash duration in milliseconds
+      initial_control_level: jsPsych.timelineVariable('initial_control_level'), // Initial control level
+      control_change_level: jsPsych.timelineVariable('control_change_level'), // Control change level
+      playback: jsPsych.timelineVariable('playback'), // Loaded playback data,
+      data: {
+        task: 'dot-moving'
+      }
+    }
+    
+    var rating_scale_visualization = `
+      <svg height="200" width="600">
+        <g transform="translate(50 0)">
+          <g transform="translate(30 50) scale(1 1)">
+            <text x="0" y="0" fill="black" font-size="30">1</text>
+            <text x="100" y="0" fill="black" font-size="30">2</text>
+            <text x="200" y="0" fill="black" font-size="30">3</text>
+            <text x="300" y="0" fill="black" font-size="30">4</text>
+            <text x="400" y="0" fill="black" font-size="30">5</text>
+          </g>
+          <g transform="translate(-60 60) scale(1 1)">
+            <line x1="100" y1="50" x2="500" y2="50" style="stroke:black;stroke-width:2" />
+            <line x1="100" y1="1" x2="100" y2="50" style="stroke:black;stroke-width:2" />
+            <line x1="200" y1="1" x2="200" y2="50" style="stroke:black;stroke-width:2" />
+            <line x1="300" y1="1" x2="300" y2="50" style="stroke:black;stroke-width:2" />
+            <line x1="400" y1="1" x2="400" y2="50" style="stroke:black;stroke-width:2" />
+            <line x1="500" y1="1" x2="500" y2="50" style="stroke:black;stroke-width:2" />
+          </g>
+          <g transform="translate(30 150) scale(1 1)">
+            <text x="-20" y="0" fill="black" font-size="20">No control at all</text>
+            <text x="300" y="0" fill="black" font-size="20">Perfect control</text>
+          </g>
+        </g>
+      </svg>`
+    
+    var rating = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Please rate how much control you had over the flashing dot.",
+      prompt: rating_scale_visualization,
+      choices: ['1', '2', '3', '4', '5'],
+      data: {
+        task: 'rating'
+      }
+    }
+
+    var block0 = {
+        timeline: [fixation, practice_test, rating],
+        timeline_variables: practice_test_stimuli,
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'practice'
+        }
+    }
+
+    var expint = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "Press the space key to begin the experiment.",
+      post_trial_gap: 2000
+    }
+
+    var block1 = {
+        timeline: [fixation, test, rating],
+        timeline_variables: test_stimuli.slice(0,60),
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'test'
+        }
+    };
+
+    var break1 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: "You have finished block one of five. You may take a break and press space to continue when ready.",
+    }
+
+    var block2 = {
+        timeline: [fixation, test, rating],
+        timeline_variables: test_stimuli.slice(60,120),
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'test'
+        }
+    };
+
+    var break2 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: "You have finished block two of five. You may take a break and press space to continue when ready.",
+    }
+
+    var block3 = {
+        timeline: [fixation, test, rating],
+        timeline_variables: test_stimuli.slice(120,180),
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'test'
+        }
+    }; 
+
+    var break3 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: "You have finished block three of five. You may take a break and press space to continue when ready.",
+    }
+
+    var block4 = {
+        timeline: [fixation, test, rating],
+        timeline_variables: test_stimuli.slice(180,240),
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'test'
+        }
+    };
+
+    var break4 = {
+      type: jsPsychHtmlKeyboardResponse,
+      choices: [' '],
+      stimulus: "You have finished block four of five. You may take a break and press space to continue when ready.",
+    }
+
+    var block5 = {
+        timeline: [fixation, test, rating],
+        timeline_variables: test_stimuli.slice(240,300),
+        randomize_order: true,
+        data: {
+          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+          control_change_level: jsPsych.timelineVariable('control_change_level'),
+          phase: 'test'
+        }
+    };
+
+    timeline.push(block0, expint, block1, break1, block2, break2, block3, break3, block4, break4, block5);
+    
+    const fullscreenExit = {
+      type: jsPsychFullscreen,
+      fullscreen_mode: false,
+      on_finish: function(){
+        jsPsych.data.localSave('json', `subject_${subject_id}_behavioral.json`);
+      }
+    };
+    timeline.push(fullscreenExit);
+
+    var goodbye = {
+      type: jsPsychHtmlKeyboardResponse,
+      stimulus: "You have completed the experiment. Thank you! Please wait for the experimenter.",
+      choices: "NO_KEYS"
+    }
+    timeline.push(goodbye);
+    
+    jsPsych.run(timeline);
+
+  </script>
+</html> 

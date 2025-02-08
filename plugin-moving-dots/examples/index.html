@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>jsPsychPluginMovingDots Example</title>
+  <script src="https://unpkg.com/jspsych"></script>
+  <!-- Load the published plugin package here, e.g.
+<script src="https://unpkg.com/plugin-moving-dots-2"></script>
+<script src="../dist/index.global.js"></script> -->
+  <link rel="stylesheet" href="https://unpkg.com/jspsych/css/jspsych.css">
+</head>
+
+<body></body>
+<script>
+  const jsPsych = initJsPsych();
+
+  const trial = {
+    type: jsPsychPluginMovingDots
+  };
+
+  jsPsych.run([trial])
+</script>
+
+</html>
