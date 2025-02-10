@@ -190,21 +190,21 @@ class MovingDotsPlugin implements JsPsychPlugin<Info> {
 
       box1.style.position = "fixed";
       box1.style.bottom = `${trial.diode_heights[0]}px`;
-      box1.style.right = "10px";
+      box1.style.right = "50px";
       box1.style.height = "5vh";
       box1.style.width = "5vh";
       box1.style.backgroundColor = "black";
 
       box2.style.position = "fixed";
       box2.style.bottom = `${trial.diode_heights[1]}px`;
-      box2.style.right = "10px";
+      box2.style.right = "50px";
       box2.style.height = "5vh";
       box2.style.width = "5vh";
       box2.style.backgroundColor = "black";
 
       box3.style.position = "fixed";
       box3.style.bottom = `${trial.diode_heights[2]}px`;
-      box3.style.right = "10px";
+      box3.style.right = "50px";
       box3.style.height = "5vh";
       box3.style.width = "5vh";
       box3.style.backgroundColor = "black";
