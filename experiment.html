@@ -197,8 +197,9 @@
 
     var expint = {
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: "Press the space key to begin the experiment.",
-      post_trial_gap: 2000
+      stimulus: "You have completed the practice trials. Once the experimenter has confirmed you are ready, press the Q key to begin the experiment.",
+      post_trial_gap: 2000,
+      choices: ['q']
     }
 
     var block1 = {
@@ -214,8 +215,8 @@
 
     var break1 = {
       type: jsPsychHtmlKeyboardResponse,
-      choices: [' '],
-      stimulus: "You have finished block one of five. You may take a break and press space to continue when ready.",
+      choices: ['q'],
+      stimulus: "You have finished block one of five. You may take a break and press Q to continue when ready.",
     }
 
     var block2 = {
@@ -231,8 +232,8 @@
 
     var break2 = {
       type: jsPsychHtmlKeyboardResponse,
-      choices: [' '],
-      stimulus: "You have finished block two of five. You may take a break and press space to continue when ready.",
+      choices: ['q'],
+      stimulus: "You have finished block two of five. You may take a break and press Q to continue when ready.",
     }
 
     var block3 = {
@@ -248,8 +249,8 @@
 
     var break3 = {
       type: jsPsychHtmlKeyboardResponse,
-      choices: [' '],
-      stimulus: "You have finished block three of five. You may take a break and press space to continue when ready.",
+      choices: ['q'],
+      stimulus: "You have finished block three of five. You may take a break and press Q to continue when ready.",
     }
 
     var block4 = {
@@ -265,8 +266,8 @@
 
     var break4 = {
       type: jsPsychHtmlKeyboardResponse,
-      choices: [' '],
-      stimulus: "You have finished block four of five. You may take a break and press space to continue when ready.",
+      choices: ['q'],
+      stimulus: "You have finished block four of five. You may take a break and press Q to continue when ready.",
     }
 
     var block5 = {
