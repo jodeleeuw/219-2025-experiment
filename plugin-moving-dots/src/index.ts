@@ -42,7 +42,7 @@ const info = <const>{
     diode_heights: {
       type: ParameterType.INT,
       array: true,
-      default: [10, 70, 130, 190]
+      default: [10, 70, 130]
     },
     /** Whether the trial is a practice trial */
     practice_trial: {
@@ -209,21 +209,13 @@ class MovingDotsPlugin implements JsPsychPlugin<Info> {
       box3.style.width = "5vh";
       box3.style.backgroundColor = "black";
 
-      box4.style.position = "fixed";
-      box4.style.bottom = `${trial.diode_heights[3]}px`;
-      box4.style.right = "10px";
-      box4.style.height = "5vh";
-      box4.style.width = "5vh";
-      box4.style.backgroundColor = "black";
-
       display_element.appendChild(box1);
       display_element.appendChild(box2);
       display_element.appendChild(box3);
-      display_element.appendChild(box4);
 
-      return [box1, box2, box3, box4];
+      return [box1, box2, box3];
     }
-    const [box1, box2, box3, box4] = createSignalBoxes();
+    const [box1, box2, box3] = createSignalBoxes();
 
     // Render dots, cross, and control value
     const renderDotsAndCross = () => {
@@ -322,17 +314,40 @@ class MovingDotsPlugin implements JsPsychPlugin<Info> {
 
     
     const flashBoxes = () => {
-      box1.style.backgroundColor = trial.initial_control_level === 100 ? "white" : "black";
-      box2.style.backgroundColor = trial.control_change_level === 30 || trial.control_change_level === 100 ? "white" : "black";
-      box3.style.backgroundColor = trial.control_change_level === 70 || trial.control_change_level === 100 ? "white" : "black";
-      box4.style.backgroundColor = trial.practice_trial ? "black" : "white";
+      if(trial.practice_trial){
+        box1.style.backgroundColor = "white";
+        box2.style.backgroundColor = "white";
+        box3.style.backgroundColor = "white";
+        return;
+      } 
+
+      if(trial.initial_control_level === 100){
+        box1.style.backgroundColor = "white";
+        if(trial.control_change_level === 70){
+          box3.style.backgroundColor = "white";
+        }
+        if(trial.control_change_level === 100){
+          box2.style.backgroundColor = "white";
+        }
+      }
+      if(trial.initial_control_level === 0){
+        if(trial.control_change_level === 30){
+          box3.style.backgroundColor = "white";
+        }
+        if(trial.control_change_level === 70){
+          box2.style.backgroundColor = "white";
+        }
+        if(trial.control_change_level === 100){
+          box2.style.backgroundColor = "white";
+          box3.style.backgroundColor = "white";
+        }
+      }
     }
 
     const resetBoxes = () => {
       box1.style.backgroundColor = "black";
       box2.style.backgroundColor = "black";
       box3.style.backgroundColor = "black";
-      box4.style.backgroundColor = "black";
     }
 
     const animate = () => {
