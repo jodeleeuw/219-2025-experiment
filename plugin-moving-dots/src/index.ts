@@ -135,17 +135,50 @@ class MovingDotsPlugin implements JsPsychPlugin<Info> {
     let dx = 0;
     let dy = 0;
 
-    let isFirstMove = true;
+    // let isFirstMove = true;
+
+    // const initializeDots = () => {
+    //   for (let i = 0; i < 10; i++) {
+    //     const angle = Math.random() * 2 * Math.PI;
+    //     const distance = Math.random() * trial.max_initial_distance;
+    //     dots.push({
+    //       x: canvas.width / 2 + distance * Math.cos(angle),
+    //       y: canvas.height / 2 + distance * Math.sin(angle),
+    //       control: trial.initial_control_level, // Initial control level
+    //     });
+    //   }
+    // };
 
     const initializeDots = () => {
+      const minDistance = 7; // Minimum distance between dots
+    
       for (let i = 0; i < 10; i++) {
-        const angle = Math.random() * 2 * Math.PI;
-        const distance = Math.random() * trial.max_initial_distance;
-        dots.push({
-          x: canvas.width / 2 + distance * Math.cos(angle),
-          y: canvas.height / 2 + distance * Math.sin(angle),
-          control: trial.initial_control_level, // Initial control level
-        });
+        let newDot;
+        let validPosition = false;
+    
+        // Try to find a valid position for the new dot
+        while (!validPosition) {
+          const angle = Math.random() * 2 * Math.PI;
+          const distance = Math.random() * trial.max_initial_distance;
+          newDot = {
+            x: canvas.width / 2 + distance * Math.cos(angle),
+            y: canvas.height / 2 + distance * Math.sin(angle),
+            control: trial.initial_control_level, // Initial control level
+          };
+    
+          // Check if the new dot is too close to any existing dots
+          validPosition = true;
+          for (const existingDot of dots) {
+            const dx = newDot.x - existingDot.x;
+            const dy = newDot.y - existingDot.y;
+            const distanceBetween = Math.sqrt(dx * dx + dy * dy);
+            if (distanceBetween < minDistance) {
+              validPosition = false;
+              break;
+            }
+          }
+        }
+        dots.push(newDot);
       }
     };
 
