@@ -14,6 +14,10 @@
     body {
       background-color: rgb(191,191,191);
     }
+
+    .no-cursor {
+      cursor: none;
+    }
     
   </style>
   <body>
@@ -76,6 +80,7 @@
         jsPsych.data.addProperties({
           subject: data.response.ID
         });
+        document.querySelector('body').classList.add('no-cursor');
       }
     }
     timeline.push(subject_id_entry);
@@ -279,7 +284,7 @@
       type: jsPsychFullscreen,
       fullscreen_mode: false,
       on_finish: function(){
-        jsPsych.data.localSave('json', `subject_${subject_id}_behavioral.json`);
+        jsPsych.data.get().localSave('json', `subject_${subject_id}_behavioral.json`);
       }
     };
     timeline.push(fullscreenExit);
