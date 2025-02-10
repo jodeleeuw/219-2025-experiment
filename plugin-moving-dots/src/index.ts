@@ -323,9 +323,9 @@ class MovingDotsPlugin implements JsPsychPlugin<Info> {
     
     const flashBoxes = () => {
       box1.style.backgroundColor = trial.initial_control_level === 100 ? "white" : "black";
-      box2.style.backgroundColor = trial.control_change_level === 30 ? "white" : "black";
-      box3.style.backgroundColor = trial.control_change_level === 70 ? "white" : "black";
-      box4.style.backgroundColor = trial.practice_trial  ? "black" : "white";
+      box2.style.backgroundColor = trial.control_change_level === 30 || trial.control_change_level === 100 ? "white" : "black";
+      box3.style.backgroundColor = trial.control_change_level === 70 || trial.control_change_level === 100 ? "white" : "black";
+      box4.style.backgroundColor = trial.practice_trial ? "black" : "white";
     }
 
     const resetBoxes = () => {
