@@ -41,7 +41,7 @@ var jsPsychPluginMovingDots = (function (jspsych) {
       diode_heights: {
         type: jspsych.ParameterType.INT,
         array: true,
-        default: [10, 70, 130, 190]
+        default: [10, 70, 130]
       },
       /** Whether the trial is a practice trial */
       practice_trial: {
@@ -142,7 +142,7 @@ var jsPsychPluginMovingDots = (function (jspsych) {
         const box12 = document.createElement("div");
         const box22 = document.createElement("div");
         const box32 = document.createElement("div");
-        const box42 = document.createElement("div");
+        document.createElement("div");
         box12.style.position = "fixed";
         box12.style.bottom = `${trial.diode_heights[0]}px`;
         box12.style.right = "10px";
@@ -161,19 +161,12 @@ var jsPsychPluginMovingDots = (function (jspsych) {
         box32.style.height = "5vh";
         box32.style.width = "5vh";
         box32.style.backgroundColor = "black";
-        box42.style.position = "fixed";
-        box42.style.bottom = `${trial.diode_heights[3]}px`;
-        box42.style.right = "10px";
-        box42.style.height = "5vh";
-        box42.style.width = "5vh";
-        box42.style.backgroundColor = "black";
         display_element.appendChild(box12);
         display_element.appendChild(box22);
         display_element.appendChild(box32);
-        display_element.appendChild(box42);
-        return [box12, box22, box32, box42];
+        return [box12, box22, box32];
       };
-      const [box1, box2, box3, box4] = createSignalBoxes();
+      const [box1, box2, box3] = createSignalBoxes();
       const renderDotsAndCross = () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         ctx.beginPath();
@@ -237,16 +230,38 @@ var jsPsychPluginMovingDots = (function (jspsych) {
         });
       };
       const flashBoxes = () => {
-        box1.style.backgroundColor = trial.initial_control_level === 100 ? "white" : "black";
-        box2.style.backgroundColor = trial.control_change_level === 30 || trial.control_change_level === 100 ? "white" : "black";
-        box3.style.backgroundColor = trial.control_change_level === 70 || trial.control_change_level === 100 ? "white" : "black";
-        box4.style.backgroundColor = trial.practice_trial ? "black" : "white";
+        if (trial.practice_trial) {
+          box1.style.backgroundColor = "white";
+          box2.style.backgroundColor = "white";
+          box3.style.backgroundColor = "white";
+          return;
+        }
+        if (trial.initial_control_level === 100) {
+          box1.style.backgroundColor = "white";
+          if (trial.control_change_level === 70) {
+            box3.style.backgroundColor = "white";
+          }
+          if (trial.control_change_level === 100) {
+            box2.style.backgroundColor = "white";
+          }
+        }
+        if (trial.initial_control_level === 0) {
+          if (trial.control_change_level === 30) {
+            box3.style.backgroundColor = "white";
+          }
+          if (trial.control_change_level === 70) {
+            box2.style.backgroundColor = "white";
+          }
+          if (trial.control_change_level === 100) {
+            box2.style.backgroundColor = "white";
+            box3.style.backgroundColor = "white";
+          }
+        }
       };
       const resetBoxes = () => {
         box1.style.backgroundColor = "black";
         box2.style.backgroundColor = "black";
         box3.style.backgroundColor = "black";
-        box4.style.backgroundColor = "black";
       };
       const animate = () => {
         const currentTime = Date.now();
