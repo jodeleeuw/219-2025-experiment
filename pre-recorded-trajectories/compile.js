@@ -26,11 +26,28 @@ fs.readdir(rawDir, (err, files) => {
 
         try {
           const jsonData = JSON.parse(data);
-          // Extract the first 20 'mouse_data' arrays from each file
           const mouseData = jsonData
             .filter(item => item.task === 'movingdots')
-            .slice(0, 20)
             .map(item => item.mouse_data);
+
+          // check if there is a dx and dy of 0 in the first spot.
+          // if so, pick a random direction to replace it
+          for(trial of mouseData){
+            if(trial[0].dx == 0 && trial[0].dy == 0){
+              trial[0] = {
+                dx: Math.round(Math.random()*20 - 10),
+                dy: Math.round(Math.random()*20 - 10)
+              }
+            }
+
+            // now check for any dx and dy values that are both 0,
+            // and replace with the previous value
+            for(let i=1; i<trial.length; i++){
+              if(trial[i].dx == 0 && trial[i].dy == 0){
+                trial[i] = trial[i-1];
+              }
+            }
+          }
 
           allMouseData.push(...mouseData);
           resolve();
