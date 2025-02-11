@@ -3,6 +3,7 @@
     <title>My experiment</title>
     <script src="jspsych/jspsych.js"></script>
     <script src="jspsych/plugin-html-keyboard-response.js"></script>
+    <script src="jspsych/plugin-html-button-response.js"></script>
     <script src="jspsych/plugin-fullscreen.js"></script>
     <script src="jspsych/plugin-survey-number.js"></script>
     <script src="jspsych/plugin-moving-dots.js"></script>
@@ -80,15 +81,22 @@
         jsPsych.data.addProperties({
           subject: data.response.ID
         });
-        document.querySelector('body').classList.add('no-cursor');
       }
     }
     timeline.push(subject_id_entry);
+
+    var click_confirmation = {
+      type: jsPsychHtmlButtonResponse,
+      stimulus: "Once the EEG system has started data collection and the monitors are ready, press the button below to proceed.",
+      choices: ['Ready to go']
+    }
+    timeline.push(click_confirmation);
     
     var introduction = {
       type: jsPsychHtmlKeyboardResponse,
       stimulus: "You will have 30 practice trials. Press the space key to begin.",
-      post_trial_gap: 2000
+      post_trial_gap: 2000,
+      choices: [' '],
     }
     timeline.push(introduction);
   
