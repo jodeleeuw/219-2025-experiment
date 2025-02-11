@@ -88,7 +88,10 @@
     var click_confirmation = {
       type: jsPsychHtmlButtonResponse,
       stimulus: "Once the EEG system has started data collection and the monitors are ready, press the button below to proceed.",
-      choices: ['Ready to go']
+      choices: ['Ready to go'],
+      on_finish: function(){
+        document.querySelector('body').classList.add('no-cursor');
+      }
     }
     timeline.push(click_confirmation);
     
