@@ -126,11 +126,17 @@
     //TO REPLACE:
     var fixation = {
       type: jsPsychHtmlKeyboardResponse,
-      stimulus: '<div style="font-size:60px;">+</div>',
+      stimulus: '<div id="fixation" style="font-size:60px;">+</div>',
       choices: [' '],
       data: {
         task: 'fixation'
-      } 
+      },
+      on_load: function() {
+        document.querySelector("#fixation").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     };
 
     var practice_test = {
@@ -192,6 +198,12 @@
       choices: ['1', '2', '3', '4', '5'],
       data: {
         task: 'rating'
+      },
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
       }
     }
 
@@ -210,7 +222,13 @@
       type: jsPsychHtmlKeyboardResponse,
       stimulus: "You have completed the practice trials. Once the experimenter has confirmed you are ready, press the Q key to begin the experiment.",
       post_trial_gap: 2000,
-      choices: ['q']
+      choices: ['q'],
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     }
 
     var block1 = {
@@ -227,7 +245,13 @@
     var break1 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: ['q'],
-      stimulus: "You have finished block one of five. You may take a break and press Q to continue when ready.",
+      stimulus: "You have finished block one of five. You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     }
 
     var block2 = {
@@ -244,7 +268,13 @@
     var break2 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: ['q'],
-      stimulus: "You have finished block two of five. You may take a break and press Q to continue when ready.",
+      stimulus: "You have finished block two of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     }
 
     var block3 = {
@@ -261,7 +291,13 @@
     var break3 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: ['q'],
-      stimulus: "You have finished block three of five. You may take a break and press Q to continue when ready.",
+      stimulus: "You have finished block three of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     }
 
     var block4 = {
@@ -278,7 +314,13 @@
     var break4 = {
       type: jsPsychHtmlKeyboardResponse,
       choices: ['q'],
-      stimulus: "You have finished block four of five. You may take a break and press Q to continue when ready.",
+      stimulus: "You have finished block four of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
+      on_load: function() {
+        document.querySelector(".jspsych-content").requestPointerLock();
+      },
+      on_finish: function() {
+        document.exitPointerLock();
+      }
     }
 
     var block5 = {
