@@ -100,6 +100,9 @@
       stimulus: "You will have 30 practice trials. Press the space key to begin.",
       post_trial_gap: 2000,
       choices: [' '],
+      on_load: function() {
+        document.querySelector('.jspsych-content').requestPointerLock();
+      }
     }
     timeline.push(introduction);
   
@@ -132,6 +135,7 @@
         task: 'fixation'
       },
       on_load: function() {
+        document.exitPointerLock();
         document.querySelector("#fixation").requestPointerLock();
       },
       on_finish: function() {
@@ -200,10 +204,8 @@
         task: 'rating'
       },
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
@@ -224,10 +226,8 @@
       post_trial_gap: 2000,
       choices: ['q'],
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
@@ -247,10 +247,8 @@
       choices: ['q'],
       stimulus: "You have finished block one of five. You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
@@ -270,10 +268,8 @@
       choices: ['q'],
       stimulus: "You have finished block two of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
@@ -293,22 +289,20 @@
       choices: ['q'],
       stimulus: "You have finished block three of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
     var block4 = {
-        timeline: [fixation, test, rating],
-        timeline_variables: test_stimuli.slice(180,240),
-        randomize_order: true,
-        data: {
-          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
-          control_change_level: jsPsych.timelineVariable('control_change_level'),
-          phase: 'test'
-        }
+      timeline: [fixation, test, rating],
+      timeline_variables: test_stimuli.slice(180,240),
+      randomize_order: true,
+      data: {
+        initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+        control_change_level: jsPsych.timelineVariable('control_change_level'),
+        phase: 'test'
+      }
     };
 
     var break4 = {
@@ -316,22 +310,20 @@
       choices: ['q'],
       stimulus: "You have finished block four of five.  You may take a break. Please wait for the experimenter to confirm that you may continue. Then press Q to continue when ready.",
       on_load: function() {
-        document.querySelector(".jspsych-content").requestPointerLock();
-      },
-      on_finish: function() {
         document.exitPointerLock();
+        document.querySelector(".jspsych-content").requestPointerLock();
       }
     }
 
     var block5 = {
-        timeline: [fixation, test, rating],
-        timeline_variables: test_stimuli.slice(240,300),
-        randomize_order: true,
-        data: {
-          initial_control_level: jsPsych.timelineVariable('initial_control_level'),
-          control_change_level: jsPsych.timelineVariable('control_change_level'),
-          phase: 'test'
-        }
+      timeline: [fixation, test, rating],
+      timeline_variables: test_stimuli.slice(240,300),
+      randomize_order: true,
+      data: {
+        initial_control_level: jsPsych.timelineVariable('initial_control_level'),
+        control_change_level: jsPsych.timelineVariable('control_change_level'),
+        phase: 'test'
+      }
     };
 
     timeline.push(block0, expint, block1, break1, block2, break2, block3, break3, block4, break4, block5);
@@ -340,6 +332,7 @@
       type: jsPsychFullscreen,
       fullscreen_mode: false,
       on_finish: function(){
+        document.exitPointerLock();
         jsPsych.data.get().localSave('json', `subject_${subject_id}_behavioral.json`);
       }
     };
